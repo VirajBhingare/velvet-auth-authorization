@@ -1,0 +1,49 @@
+generator client {
+  provider = "prisma-client"
+  output   = "./generated/"
+}
+
+datasource db {
+  provider = "postgresql"
+  // url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  INSTRUCTOR
+  MANAGER
+  EMPLOYEE
+}
+
+model User {
+  id        String @id @default(uuid())
+  email     String @unique
+  password  String
+  firstName String
+  lastName  String
+  role      Role   @default(EMPLOYEE)
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Indexes
+  @@index([email])
+  @@index([role])
+  // Map
+  @@map("users")
+}
+
+model BlacklistedToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  expiresAt DateTime
+  userId    String?
+
+  // Timestamps
+  createdAt DateTime @default(now())
+
+  @@index([expiresAt])
+  @@index([token])
+  @@map("blacklisted_tokens")
+}

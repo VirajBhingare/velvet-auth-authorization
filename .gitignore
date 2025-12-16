@@ -1,0 +1,6 @@
+node_modules
+.env
+/src/generated/prisma
+
+# Status Codes
+status_codes.png
