@@ -7,6 +7,7 @@ const cleanUpTokens = async () => {
     console.log("Starting token removal...");
     const count = await removeExpiredTokens();
     console.log(`Token cleanup complete. Removed ${count} expired tokens`);
+    process.exit(0);
   } catch (error) {
     console.error("Token cleanup failed", error);
     await prisma.$disconnect();
