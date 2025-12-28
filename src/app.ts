@@ -4,6 +4,7 @@ dotenv.config();
 import express, { Request, Response } from "express";
 import cors from "cors";
 import prisma from "./config/database";
+import cookieParser from "cookie-parser";
 
 // ROUTE IMPORTS
 import authRoutes from "./routes/auth.routes";
@@ -13,10 +14,12 @@ import userRoutes from "./routes/user.routes";
 const app = express();
 app.use(
   cors({
-    origin: ["http://localhost:3000"],
+    origin: ["http://localhost:8000", "http://localhost:3000"],
+    credentials: true,
   })
 );
 app.use(express.json());
+app.use(cookieParser());
 
 // ENV VARS
 const PORT = process.env.PORT || 8001;

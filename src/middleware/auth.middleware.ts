@@ -1,7 +1,7 @@
 import { Response, NextFunction } from "express";
 import { AuthRequest } from "../types/index";
 import { verifyToken } from "../utils/jwt";
-import { Role } from "../../prisma/generated/client";
+import { Role } from "../generated/prisma/client";
 import { isBlacklistedToken } from "../utils/tokenBlacklist";
 
 export const authenticate = async (

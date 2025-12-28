@@ -1,5 +1,5 @@
 import { Request } from "express";
-import { Role } from "../../prisma/generated/client";
+import { Role } from "../generated/prisma/client";
 
 export interface RegisterDTO {
   email: string;

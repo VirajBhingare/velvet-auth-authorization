@@ -1,15 +1,10 @@
 import { Router } from "express";
 import { getAllUsers } from "../controllers/user.controller";
 import { authenticate, authorize } from "../middleware/auth.middleware";
-import { Role } from "../../prisma/generated/client";
+import { Role } from "../generated/prisma/client";
 
 const router = Router();
 
-router.get(
-  "/all",
-  authenticate,
-  authorize(Role.ADMIN, Role.MANAGER),
-  getAllUsers
-);
+router.get("/all", authenticate, authorize(Role.ADMIN), getAllUsers);
 
 export default router;

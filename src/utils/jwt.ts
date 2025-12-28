@@ -2,19 +2,38 @@ import jwt from "jsonwebtoken";
 import { JWTPayload } from "../types/index";
 
 const JWT_SECRET = process.env.JWT_SECRET || "fallback-LHASHDlHDHEDP_JSK";
-const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || "1h";
+const JWT_ACCESS_EXPIRES_IN = process.env.JWT_ACCESS_EXPIRES_IN || "1h";
+const JWT_REFRESH_EXPIRES_IN = process.env.JWT_REFRESH_EXPIRES_IN || "3d";
 
-export const generateToken = (payload: JWTPayload): string => {
+export const generateAccessToken = (payload: JWTPayload): string => {
   return jwt.sign(payload, JWT_SECRET, {
-    expiresIn: JWT_EXPIRES_IN,
+    expiresIn: JWT_ACCESS_EXPIRES_IN,
+  } as jwt.SignOptions);
+};
+
+export const generateRefreshToken = (payload: JWTPayload): string => {
+  return jwt.sign(payload, JWT_SECRET, {
+    expiresIn: JWT_REFRESH_EXPIRES_IN,
   } as jwt.SignOptions);
 };
 
 export const verifyToken = (
   token: string
 ): JWTPayload & { exp: number; iat: number } => {
-  return jwt.verify(token, JWT_SECRET) as JWTPayload & {
+  const decoded = jwt.verify(token, JWT_SECRET) as jwt.JwtPayload;
+  return decoded as JWTPayload & {
     exp: number;
     iat: number;
   };
+};
+
+export const decodeToken = (
+  token: string
+): (JWTPayload & { exp?: number; iat?: number }) | null => {
+  try {
+    const decoded = jwt.decode(token) as jwt.JwtPayload;
+    return decoded as JWTPayload & { exp?: number; iat?: number };
+  } catch (error) {
+    return null;
+  }
 };

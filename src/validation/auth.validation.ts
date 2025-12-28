@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { Role } from "../../prisma/generated/client";
+import { Role } from "../generated/prisma/client";
 
 const firstNameValidation = z
   .string()
