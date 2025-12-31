@@ -22,28 +22,54 @@ import {
   verifyOtpSchema,
 } from "../validation/auth.validation";
 import { authenticate } from "../middleware/auth.middleware";
+import { authLimiter, apiLimiter } from "../middleware/rateLimiter";
 
 const router = Router();
 
 // Registration Flow
-router.post("/register", validate(registerSchema), registerUser);
-router.post("/verify-email", validate(verifyOtpSchema), verifyEmail);
-router.post("/resend-otp", validate(resendOtpSchema), resendVerificationOtp);
+router.post("/register", authLimiter, validate(registerSchema), registerUser);
+router.post(
+  "/verify-email",
+  authLimiter,
+  validate(verifyOtpSchema),
+  verifyEmail
+);
+router.post(
+  "/resend-otp",
+  authLimiter,
+  validate(resendOtpSchema),
+  resendVerificationOtp
+);
 
 // Login Flow
-router.post("/login", validate(loginSchema), loginUser);
-router.post("/verify-login", validate(verifyOtpSchema), verifyLogin);
+router.post("/login", authLimiter, validate(loginSchema), loginUser);
+router.post(
+  "/verify-login",
+  authLimiter,
+  validate(verifyOtpSchema),
+  verifyLogin
+);
 
 // Password Reset Flow
-router.post("/forgot-password", validate(forgotPasswordSchema), forgotPassword);
-router.post("/reset-password", validate(resetPasswordSchema), resetPassword);
+router.post(
+  "/forgot-password",
+  authLimiter,
+  validate(forgotPasswordSchema),
+  forgotPassword
+);
+router.post(
+  "/reset-password",
+  authLimiter,
+  validate(resetPasswordSchema),
+  resetPassword
+);
 
 // Token management
-router.post("/refresh", refreshAccessToken);
+router.post("/refresh", apiLimiter, refreshAccessToken);
 
 // Protected Routes (Require Bearer Token)
-router.post("/logout", authenticate, logout);
-router.post("/logout-all", authenticate, logoutAll);
-router.get("/profile", authenticate, getProfile);
+router.post("/logout", authenticate, apiLimiter, logout);
+router.post("/logout-all", authenticate, apiLimiter, logoutAll);
+router.get("/profile", authenticate, apiLimiter, getProfile);
 
 export default router;
