@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { Role } from "../generated/prisma/client";
+import { otpLength } from "../utils/email";
 
 const firstNameValidation = z
   .string()
@@ -37,5 +38,37 @@ export const registerSchema = z
 
 export const loginSchema = z.object({
   email: z.email({ error: "Invalid email address" }),
-  password: passwordValidation,
+  password: z.string().min(1, "Password is required"),
 });
+
+export const verifyOtpSchema = z.object({
+  email: z.email({ error: "Invalid email address" }),
+  otp: z.string().length(otpLength, `OTP must be ${otpLength} digits`),
+});
+
+export const resendOtpSchema = z.object({
+  email: z.email({ error: "Invalid email address" }),
+});
+
+export const forgotPasswordSchema = z.object({
+  email: z.email({ error: "Invalid email address" }),
+});
+
+export const resetPasswordSchema = z
+  .object({
+    email: z.email(),
+    otp: z.string().length(otpLength, `OTP must be ${otpLength} digits`),
+    password: passwordValidation,
+    confirmPassword: z.string({ error: "Confirm password is required" }),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
+
+export type RegisterInput = z.infer<typeof registerSchema>;
+export type LoginInput = z.infer<typeof loginSchema>;
+export type VerifyOtpInput = z.infer<typeof verifyOtpSchema>;
+export type ResendOtpInput = z.infer<typeof resendOtpSchema>;
+export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>;
+export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;

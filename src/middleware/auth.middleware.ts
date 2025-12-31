@@ -1,8 +1,9 @@
 import { Response, NextFunction } from "express";
-import { AuthRequest } from "../types/index";
+import { AuthRequest } from "../types";
 import { verifyToken } from "../utils/jwt";
 import { Role } from "../generated/prisma/client";
 import { isBlacklistedToken } from "../utils/tokenBlacklist";
+import { sendResponse } from "../utils/response";
 
 export const authenticate = async (
   req: AuthRequest,
@@ -13,7 +14,11 @@ export const authenticate = async (
     const authHeader = req.headers.authorization;
 
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return res.status(401).json({ message: "No token provided" });
+      return sendResponse({
+        res,
+        statusCode: 401,
+        message: "No token provided",
+      });
     }
 
     const token = authHeader.substring(7);
@@ -21,7 +26,11 @@ export const authenticate = async (
     const blacklisted = await isBlacklistedToken(token);
 
     if (blacklisted) {
-      return res.status(401).json({ message: "Token has been revoked" });
+      return sendResponse({
+        res,
+        statusCode: 401,
+        message: "Token has been revoked",
+      });
     }
 
     const decoded = verifyToken(token);
@@ -38,20 +47,26 @@ export const authenticate = async (
 
     next();
   } catch (error) {
-    res.status(401).json({ message: "Invalid or expired token" });
+    return sendResponse({
+      res,
+      statusCode: 401,
+      message: "Invalid or expired token",
+    });
   }
 };
 
 export const authorize = (...roles: Role[]) => {
   return (req: AuthRequest, res: Response, next: NextFunction) => {
     if (!req.user) {
-      return res.status(401).json({ message: "Unauthorized" });
+      return sendResponse({ res, statusCode: 401, message: "Unauthorized" });
     }
 
     if (!roles.includes(req.user.role)) {
-      return res
-        .status(403)
-        .json({ message: "Forbidden: Insufficient permissions" });
+      return sendResponse({
+        res,
+        statusCode: 403,
+        message: "Forbidden: Insufficient permissions",
+      });
     }
 
     next();

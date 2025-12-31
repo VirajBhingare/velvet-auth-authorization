@@ -4,3 +4,5 @@ node_modules
 
 # Status Codes
 status_codes.png
+
+seed.ts

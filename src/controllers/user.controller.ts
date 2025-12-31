@@ -1,6 +1,7 @@
 import { AuthRequest } from "../types";
 import { Response } from "express";
 import prisma from "../config/database";
+import { sendResponse } from "../utils/response";
 
 export const getAllUsers = async (req: AuthRequest, res: Response) => {
   try {
@@ -20,12 +21,21 @@ export const getAllUsers = async (req: AuthRequest, res: Response) => {
     });
 
     if (!allUsers) {
-      return res.status(404).json("No users found");
+      return sendResponse({ res, statusCode: 404, message: "No users found" });
     }
 
-    res.status(200).json({ users: allUsers, count: allUsers.length });
+    return sendResponse({
+      res,
+      statusCode: 200,
+      message: "All users retrieved successfully",
+      data: { users: allUsers, count: allUsers.length },
+    });
   } catch (error) {
     console.error(error);
-    res.status(500).json("Internal server error");
+    return sendResponse({
+      res,
+      statusCode: 500,
+      message: error instanceof Error ? error.message : "Internal server error",
+    });
   }
 };

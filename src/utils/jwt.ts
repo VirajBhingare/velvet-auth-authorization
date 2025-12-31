@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
-import { JWTPayload } from "../types/index";
+import { JWTPayload } from "../types";
+import crypto from "crypto";
 
 const JWT_SECRET = process.env.JWT_SECRET || "fallback-LHASHDlHDHEDP_JSK";
 const JWT_ACCESS_EXPIRES_IN = process.env.JWT_ACCESS_EXPIRES_IN || "1h";
@@ -36,4 +37,8 @@ export const decodeToken = (
   } catch (error) {
     return null;
   }
+};
+
+export const hashToken = (token: string) => {
+  return crypto.createHash("sha256").update(token).digest("hex");
 };

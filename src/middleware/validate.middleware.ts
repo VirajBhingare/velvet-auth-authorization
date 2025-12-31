@@ -1,10 +1,12 @@
 import { Request, Response, NextFunction } from "express";
 import { ZodType, ZodError } from "zod";
+import { sendResponse } from "../utils/response";
 
 export const validate = (schema: ZodType) => {
-  return (req: Request, res: Response, next: NextFunction) => {
+  return async (req: Request, res: Response, next: NextFunction) => {
     try {
-      schema.parse(req.body);
+      await schema.parseAsync(req.body);
+      req.body = await schema.parseAsync(req.body);
       next();
     } catch (error) {
       if (error instanceof ZodError) {
@@ -13,13 +15,20 @@ export const validate = (schema: ZodType) => {
           message: issue.message,
         }));
 
-        return res.status(400).json({
+        return sendResponse({
+          res,
+          statusCode: 400,
           message: "Validation failed",
-          errors,
+          error: errors,
         });
       }
 
-      return res.status(500).json({ message: "Internal server error" });
+      return sendResponse({
+        res,
+        statusCode: 500,
+        message:
+          error instanceof Error ? error.message : "Internal server error",
+      });
     }
   };
 };

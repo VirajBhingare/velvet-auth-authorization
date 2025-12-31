@@ -1,20 +1,6 @@
 import { Request } from "express";
 import { Role } from "../generated/prisma/client";
 
-export interface RegisterDTO {
-  email: string;
-  password: string;
-  firstName: string;
-  lastName: string;
-  confirmPassword: string;
-  role?: Role;
-}
-
-export interface LoginDTO {
-  email: string;
-  password: string;
-}
-
 export interface JWTPayload {
   id: string;
   email: string;

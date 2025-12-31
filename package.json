@@ -11,6 +11,9 @@
     "dev": "tsx watch ./src/app.ts",
     "cleanup:tokens": "tsx src/scripts/cleanupTokens.ts"
   },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
   "devDependencies": {
     "@prisma/adapter-pg": "^7.1.0",
     "@prisma/client": "^7.1.0",
@@ -20,6 +23,7 @@
     "@types/express": "^5.0.6",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^24.10.1",
+    "@types/nodemailer": "^7.0.4",
     "@types/pg": "^8.15.6",
     "nodemon": "^3.1.11",
     "prisma": "^7.1.0",
@@ -34,6 +38,7 @@
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.2",
+    "nodemailer": "^7.0.12",
     "pg": "^8.16.3",
     "zod": "^4.1.13"
   }

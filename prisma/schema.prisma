@@ -27,6 +27,11 @@ model User {
   updatedAt    DateTime       @updatedAt
   RefreshToken RefreshToken[]
 
+  // OTP Fields
+  isVerified Boolean   @default(false)
+  otp        String? // Store hashed OTP
+  otpExpires DateTime?
+
   // Indexes
   @@index([email])
   @@index([role])
