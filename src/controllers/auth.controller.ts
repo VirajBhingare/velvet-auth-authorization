@@ -18,7 +18,7 @@ import {
   ResetPasswordInput,
   VerifyOtpInput,
 } from "../validation/auth.validation";
-import { Role } from "../generated/prisma/enums";
+import { Role } from "@prisma/client";
 import { generateOTP, sendEmail } from "../utils/email";
 
 export const registerUser = async (

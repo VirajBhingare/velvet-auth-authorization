@@ -9,9 +9,12 @@ import cookieParser from "cookie-parser";
 // ROUTE IMPORTS
 import authRoutes from "./routes/auth.routes";
 import userRoutes from "./routes/user.routes";
+import helmet from "helmet";
+import { sendResponse } from "./utils/response";
 
 // CONFIG
 const app = express();
+app.use(helmet());
 app.use(
   cors({
     origin: ["http://localhost:8000", "http://localhost:3000"],
@@ -22,12 +25,16 @@ app.use(express.json());
 app.use(cookieParser());
 
 // ENV VARS
-const PORT = process.env.PORT || 8001;
-const HOST = process.env.HOST;
+const PORT = process.env.PORT || 8000;
+const HOST = process.env.HOST || "0.0.0.0";
 
 // ROUTES
 app.get("/health", (req: Request, res: Response) => {
-  res.status(200).json({ status: "OK", message: "Server is running" });
+  sendResponse({
+    res,
+    statusCode: 200,
+    message: "Server is running successfully.",
+  });
 });
 
 app.use("/api/auth", authRoutes);

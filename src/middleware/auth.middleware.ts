@@ -1,7 +1,7 @@
 import { Response, NextFunction } from "express";
 import { AuthRequest } from "../types";
 import { verifyToken } from "../utils/jwt";
-import { Role } from "../generated/prisma/client";
+import { Role } from "@prisma/client";
 import { isBlacklistedToken } from "../utils/tokenBlacklist";
 import { sendResponse } from "../utils/response";
 

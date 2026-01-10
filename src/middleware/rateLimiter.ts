@@ -3,7 +3,7 @@ import { sendResponse } from "../utils/response";
 
 export const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 Minutes
-  limit: 5, // Limit each IP to 5 requests per windowMs
+  limit: 50, // Limit each IP to 50 requests per windowMs
   standardHeaders: true,
   legacyHeaders: false,
   handler: (req, res) => {

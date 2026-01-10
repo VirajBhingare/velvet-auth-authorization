@@ -1,5 +1,5 @@
 import { Request } from "express";
-import { Role } from "../generated/prisma/client";
+import { Role } from "@prisma/client";
 
 export interface JWTPayload {
   id: string;

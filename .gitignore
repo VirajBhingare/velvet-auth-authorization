@@ -1,8 +1,48 @@
+# Node.js
 node_modules
-.env
-/src/generated/prisma
+/dist
+/build
+.env*
+.env.local
+
+# Prisma
+# Exclude the generated Prisma Client directory to avoid version control issues on different machines
+# The default output is node_modules/.prisma or specified in schema.prisma
+# If you specified a custom output, update the path here, e.g., /src/generated/prisma-client
+node_modules/.prisma
+/prisma/migrations # Keep migrations but ignore the generated client files within
+
+# Optional: if using vercel/pkg to package the app
+/binaries
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+*.tgz
+
+# OS and Editor files
+.DS_Store
+*.suo
+*.user
+*.cas
+*.sap
+*.jcw
+
+# IDE files
+.vscode/
+.idea/
+
+# TypeScript
+*.tsbuildinfo
+
+# Test coverage
+/coverage
 
 # Status Codes
 status_codes.png
 
+# Admin user seed file
 seed.ts

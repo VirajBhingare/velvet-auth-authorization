@@ -11,6 +11,9 @@ CREATE TABLE "users" (
     "role" "Role" NOT NULL DEFAULT 'EMPLOYEE',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "isVerified" BOOLEAN NOT NULL DEFAULT false,
+    "otp" TEXT,
+    "otpExpires" TIMESTAMP(3),
 
     CONSTRAINT "users_pkey" PRIMARY KEY ("id")
 );
