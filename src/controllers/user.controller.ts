@@ -1,26 +1,13 @@
 import { AuthRequest } from "../types";
 import { Response } from "express";
-import prisma from "../config/database";
 import { sendResponse } from "../utils/response";
+import * as UserService from "../services/user.service";
 
 export const getAllUsers = async (req: AuthRequest, res: Response) => {
   try {
-    const allUsers = await prisma.user.findMany({
-      select: {
-        id: true,
-        email: true,
-        firstName: true,
-        lastName: true,
-        role: true,
-        createdAt: true,
-        updatedAt: true,
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-    });
+    const allUsers = await UserService.getAllUsers();
 
-    if (!allUsers) {
+    if (!allUsers || allUsers.length === 0) {
       return sendResponse({ res, statusCode: 404, message: "No users found" });
     }
 

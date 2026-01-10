@@ -6,11 +6,10 @@ import {
   registerUser,
   logoutAll,
   refreshAccessToken,
-  verifyEmail,
-  verifyLogin,
-  resendVerificationOtp,
   forgotPassword,
   resetPassword,
+  verifyOtp,
+  resendOtp,
 } from "../controllers/auth.controller";
 import { validate } from "../middleware/validate.middleware";
 import {
@@ -28,27 +27,11 @@ const router = Router();
 
 // Registration Flow
 router.post("/register", authLimiter, validate(registerSchema), registerUser);
-router.post(
-  "/verify-email",
-  authLimiter,
-  validate(verifyOtpSchema),
-  verifyEmail
-);
-router.post(
-  "/resend-otp",
-  authLimiter,
-  validate(resendOtpSchema),
-  resendVerificationOtp
-);
+router.post("/verify-otp", authLimiter, validate(verifyOtpSchema), verifyOtp);
+router.post("/resend-otp", authLimiter, validate(resendOtpSchema), resendOtp);
 
 // Login Flow
 router.post("/login", authLimiter, validate(loginSchema), loginUser);
-router.post(
-  "/verify-login",
-  authLimiter,
-  validate(verifyOtpSchema),
-  verifyLogin
-);
 
 // Password Reset Flow
 router.post(
