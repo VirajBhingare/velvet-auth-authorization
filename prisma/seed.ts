@@ -5,11 +5,17 @@ const prisma = new PrismaClient();
 
 const main = async () => {
   const ADMIN_PASS = process.env.ADMIN_PASS;
+  const INSTRUCTOR_PASS = process.env.INSTRUCTOR_PASS;
   if (!ADMIN_PASS) {
     throw new Error("ADMIN_PASS environment variable required");
   }
 
-  const hashedPassword = await bcrypt.hash(ADMIN_PASS, 10);
+  if (!INSTRUCTOR_PASS) {
+    throw new Error("ADMIN_PASS environment variable required");
+  }
+
+  const hashedAdminPassword = await bcrypt.hash(ADMIN_PASS, 10);
+  const hashedInstructorPassword = await bcrypt.hash(INSTRUCTOR_PASS, 10);
 
   const admin = await prisma.user.upsert({
     where: { email: "virajbhingare360@gmail.com" },
@@ -18,7 +24,7 @@ const main = async () => {
       email: "virajbhingare360@gmail.com",
       firstName: "Super",
       lastName: "Admin",
-      password: hashedPassword,
+      password: hashedAdminPassword,
       role: Role.ADMIN,
       isVerified: true,
       otp: null,
@@ -33,7 +39,7 @@ const main = async () => {
       email: "viru3.b@proton.me",
       firstName: "Master",
       lastName: "Intructor",
-      password: hashedPassword,
+      password: hashedInstructorPassword,
       role: Role.INSTRUCTOR,
       isVerified: true,
       otp: null,
