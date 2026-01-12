@@ -1,5 +1,6 @@
 import nodemailer from "nodemailer";
 import crypto from "crypto";
+import logger from "./logger";
 
 export const otpLength = 6;
 
@@ -13,7 +14,7 @@ export const sendEmail = async (to: string, otp: string) => {
   const text = `Your verification OTP is : ${otp}`;
 
   if (process.env.NODE_ENV === "development" || !process.env.SMTP_USER) {
-    console.log(`[EMAIL DEV] To: ${to} | Subject: ${subject} | Body: ${text}`);
+    logger.info(`[EMAIL DEV] To: ${to} | Subject: ${subject} | Body: ${text}`);
     return;
   }
 

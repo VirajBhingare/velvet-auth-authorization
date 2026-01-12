@@ -1,4 +1,5 @@
 import prisma from "../config/database";
+import logger from "./logger";
 
 export const addToBlacklist = async (
   token: string,
@@ -14,7 +15,7 @@ export const addToBlacklist = async (
       },
     });
   } catch (error) {
-    console.error("Error adding token to blacklist: ", error);
+    logger.error("Error adding token to blacklist: ", error);
     throw new Error("Failed to blacklist token");
   }
 };
@@ -27,7 +28,7 @@ export const isBlacklistedToken = async (token: string): Promise<boolean> => {
 
     return blacklisted !== null;
   } catch (error) {
-    console.error("Error checking token blacklist: ", error);
+    logger.error("Error checking token blacklist: ", error);
     return false;
   }
 };
@@ -41,15 +42,17 @@ export const removeExpiredTokens = async (): Promise<number> => {
         },
       },
     });
-    console.log(`Cleaned up ${result.count} expired tokens`);
+    logger.info(`Cleaned up ${result.count} expired tokens`);
     return result.count;
   } catch (error) {
-    console.error("Error removing expired tokens:", error);
+    logger.error("Error removing expired tokens:", error);
     return 0;
   }
 };
 
 // Cleanup every hour
-setInterval(async () => {
-  await removeExpiredTokens();
-}, 60 * 60 * 1000);
+if (process.env.NODE_ENV === "production") {
+  setInterval(async () => {
+    await removeExpiredTokens();
+  }, 60 * 60 * 1000);
+}

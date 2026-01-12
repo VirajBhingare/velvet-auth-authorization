@@ -196,7 +196,10 @@ export const resetPassword = async (input: ResetPasswordInput) => {
   const { email, otp, password } = input;
   const user = await prisma.user.findUnique({ where: { email } });
 
-  if (!user) throw new Error("User not found");
+  if (!user) {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    throw new Error("Invalid OTP or email");
+  }
   if (!user.otpExpires || user.otpExpires < new Date())
     throw new Error("OTP expired");
 
@@ -299,6 +302,9 @@ export const getProfile = async (userId: string) => {
       updatedAt: true,
     },
   });
-  if (!user) throw new Error("User not found");
+  if (!user) {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    throw new Error("Invalid OTP or email");
+  }
   return user;
 };

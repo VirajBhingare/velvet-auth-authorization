@@ -5,6 +5,8 @@ import express, { Request, Response } from "express";
 import cors from "cors";
 import prisma from "./config/database";
 import cookieParser from "cookie-parser";
+import morganMiddleware from "./middleware/httpLogger";
+import logger from "./utils/logger";
 
 // ROUTE IMPORTS
 import authRoutes from "./routes/auth.routes";
@@ -23,6 +25,7 @@ app.use(
 );
 app.use(express.json());
 app.use(cookieParser());
+app.use(morganMiddleware);
 
 // ENV VARS
 const PORT = process.env.PORT || 8000;
@@ -46,14 +49,14 @@ let server: ReturnType<typeof app.listen>;
 const startServer = async () => {
   try {
     await prisma.$connect();
-    console.log("Database connected successfully.");
+    logger.info("Database connected successfully.");
 
     server = app.listen(PORT, () => {
-      console.log(`Server is running on ${HOST}:${PORT}`);
-      console.log(`Health check: ${HOST}:${PORT}/health`);
+      logger.info(`Server is running on ${HOST}:${PORT}`);
+      logger.info(`Health check: ${HOST}:${PORT}/health`);
     });
   } catch (error) {
-    console.error("Failed to start the server", error);
+    logger.error("Failed to start the server", error);
     process.exit(1);
   }
 };

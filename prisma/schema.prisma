@@ -32,11 +32,28 @@ model User {
   otp        String? // Store hashed OTP
   otpExpires DateTime?
 
+  // Relation to Course
+  courses Course[]
+
   // Indexes
   @@index([email])
   @@index([role])
   // Map
   @@map("users")
+}
+
+model Course {
+  id           String  @id @default(uuid())
+  title        String
+  description  String?
+  instructorId String
+  instructor   User    @relation(fields: [instructorId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([instructorId])
+  @@map("courses")
 }
 
 model RefreshToken {

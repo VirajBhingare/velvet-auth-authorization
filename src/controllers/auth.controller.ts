@@ -230,7 +230,10 @@ export const logoutAll = async (req: AuthRequest, res: Response) => {
 
 export const getProfile = async (req: AuthRequest, res: Response) => {
   try {
-    const userId = req.user!.id;
+    if (!req.user?.id) {
+      return sendResponse({ res, statusCode: 401, message: "Unauthorized" });
+    }
+    const userId = req.user.id;
     const user = await AuthService.getProfile(userId);
     return sendResponse({
       res,

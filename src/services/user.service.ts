@@ -18,3 +18,38 @@ export const getAllUsers = async () => {
 
   return allUsers;
 };
+
+// --- Instructor: Create Courses ---
+export const createCourse = async (
+  title: string,
+  description: string,
+  instructorId: string
+) => {
+  return await prisma.course.create({
+    data: {
+      title,
+      description,
+      instructorId,
+    },
+  });
+};
+
+// --- Instructor: Get My Courses ---
+export const getMyCourses = async (instructorId: string) => {
+  return await prisma.course.findMany({
+    where: { instructorId },
+    orderBy: { createdAt: "desc" },
+  });
+};
+
+// --- Employee/Public: Get All Courses ---
+export const getAllCourses = async () => {
+  return await prisma.course.findMany({
+    include: {
+      instructor: {
+        select: { firstName: true, lastName: true },
+      },
+    },
+    orderBy: { createdAt: "desc" },
+  });
+};

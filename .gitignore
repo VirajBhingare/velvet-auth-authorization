@@ -43,6 +43,3 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
 # Status Codes
 status_codes.png
-
-# Admin user seed file
-seed.ts
