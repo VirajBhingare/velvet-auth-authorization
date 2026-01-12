@@ -13,6 +13,7 @@ services:
       - SMTP_USER=${SMTP_USER}
       - SMTP_PASS=${SMTP_PASS}
       - ADMIN_PASS=${ADMIN_PASS}
+      - INSTRUCTOR_PASS=${INSTRUCTOR_PASS}
       - HOST=0.0.0.0
     depends_on:
       db:

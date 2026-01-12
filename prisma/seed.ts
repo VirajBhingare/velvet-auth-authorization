@@ -11,7 +11,7 @@ const main = async () => {
   }
 
   if (!INSTRUCTOR_PASS) {
-    throw new Error("ADMIN_PASS environment variable required");
+    throw new Error("INSTRUCTOR_PASS environment variable required");
   }
 
   const hashedAdminPassword = await bcrypt.hash(ADMIN_PASS, 10);
