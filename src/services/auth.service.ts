@@ -1,5 +1,6 @@
 import prisma from "../config/database";
 import bcrypt from "bcrypt";
+import crypto from "crypto";
 import { Role } from "@prisma/client";
 import {
   generateAccessToken,
@@ -16,6 +17,7 @@ import {
   ResendOtpInput,
   ForgotPasswordInput,
   ResetPasswordInput,
+  CreateUserByAdminInput,
 } from "../validation/auth.validation";
 
 // --- Register Service ---
@@ -306,5 +308,47 @@ export const getProfile = async (userId: string) => {
     await new Promise((resolve) => setTimeout(resolve, 1000));
     throw new Error("Invalid OTP or email");
   }
+  return user;
+};
+
+// --- Only Admin can Create User ---
+export const createUserByAdmin = async (input: CreateUserByAdminInput) => {
+  const { email, firstName, lastName, role } = input;
+
+  const existingUser = await prisma.user.findUnique({ where: { email } });
+  if (existingUser) {
+    throw new Error("User already exists");
+  }
+
+  const randomPassword = crypto.randomBytes(16).toString("hex");
+  const hashedPassword = await bcrypt.hash(randomPassword, 10);
+
+  const otp = generateOTP();
+  const hashedOTP = await bcrypt.hash(otp, 10);
+  const otpExpires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours expiry for invites
+
+  // 3. Create the user
+  const user = await prisma.user.create({
+    data: {
+      email,
+      password: hashedPassword,
+      firstName,
+      lastName,
+      role: role,
+      isVerified: false,
+      otp: hashedOTP,
+      otpExpires,
+    },
+    select: {
+      id: true,
+      email: true,
+      firstName: true,
+      lastName: true,
+      role: true,
+    },
+  });
+
+  await sendEmail(email, otp);
+
   return user;
 };

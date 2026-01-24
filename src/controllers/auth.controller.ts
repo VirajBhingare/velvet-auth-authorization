@@ -9,6 +9,7 @@ import {
   ResendOtpInput,
   ForgotPasswordInput,
   ResetPasswordInput,
+  CreateUserByAdminInput,
 } from "../validation/auth.validation";
 
 const handleError = (
@@ -239,6 +240,24 @@ export const getProfile = async (req: AuthRequest, res: Response) => {
       res,
       statusCode: 200,
       message: "Profile details retrieved.",
+      data: user,
+    });
+  } catch (error) {
+    return handleError(res, error);
+  }
+};
+
+// Only Admin can create user
+export const createUserByAdmin = async (
+  req: Request<{}, {}, CreateUserByAdminInput>,
+  res: Response
+) => {
+  try {
+    const user = await AuthService.createUserByAdmin(req.body);
+    return sendResponse({
+      res,
+      statusCode: 201,
+      message: `User created successfully with role ${user.role}`,
       data: user,
     });
   } catch (error) {

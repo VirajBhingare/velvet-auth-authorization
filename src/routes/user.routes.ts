@@ -9,15 +9,24 @@ import { authenticate, authorize } from "../middleware/auth.middleware";
 import { Role } from "@prisma/client";
 import { createCourseSchema } from "../validation/user.validation";
 import { validate } from "../middleware/validate.middleware";
+import { createUserByAdminSchema } from "../validation/auth.validation";
+import { createUserByAdmin } from "../controllers/auth.controller";
 
 const router = Router();
 
 // ADMIN Routes
 router.get("/all", authenticate, authorize(Role.ADMIN), getAllUsers);
+router.post(
+  "/create",
+  authenticate,
+  authorize(Role.ADMIN),
+  validate(createUserByAdminSchema),
+  createUserByAdmin
+);
 
 // INSTRUCTOR Routes
 router.post(
-  "/course",
+  "/instructor/create-course",
   authenticate,
   authorize(Role.INSTRUCTOR),
   validate(createCourseSchema),
@@ -33,7 +42,7 @@ router.get(
 
 // All roles can VIEW all courses
 router.get(
-  "/courses",
+  "/all-courses",
   authenticate,
   authorize(Role.ADMIN, Role.EMPLOYEE, Role.INSTRUCTOR),
   getAllCourses

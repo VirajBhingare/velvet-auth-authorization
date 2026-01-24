@@ -17,6 +17,7 @@ const main = async () => {
   const hashedAdminPassword = await bcrypt.hash(ADMIN_PASS, 10);
   const hashedInstructorPassword = await bcrypt.hash(INSTRUCTOR_PASS, 10);
 
+  // Seed Admin user
   const admin = await prisma.user.upsert({
     where: { email: "virajbhingare360@gmail.com" },
     update: {},
@@ -32,6 +33,7 @@ const main = async () => {
     },
   });
 
+  // Seed Instructor user
   const instructor = await prisma.user.upsert({
     where: { email: "viru3.b@proton.me" },
     update: {},
@@ -52,6 +54,43 @@ const main = async () => {
 
   console.log({ instructor });
   console.log("Instructor user seeded.");
+
+  // Check for existing courses and delete to avoid duplicates
+  await prisma.course.deleteMany({
+    where: { instructorId: instructor.id },
+  });
+
+  const dummyCourses = [
+    {
+      title: "Docker Mastery: From Zero to Hero",
+      description:
+        "Learn how to build, ship, and run distributed applications with Docker.",
+    },
+    {
+      title: "Advanced TypeScript Patterns",
+      description:
+        "Deep dive into generics, utility types, and design patterns in TS.",
+    },
+    {
+      title: "PostgreSQL Database Administration",
+      description:
+        "Master indexing, partitioning, and performance tuning in Postgres.",
+    },
+  ];
+
+  for (const course of dummyCourses) {
+    await prisma.course.create({
+      data: {
+        title: course.title,
+        description: course.description,
+        instructorId: instructor.id, // Link to the instructor just created/found
+      },
+    });
+  }
+
+  console.log(
+    `${dummyCourses.length} dummy courses seeded for ${instructor.firstName} ${instructor.lastName} (${instructor.email}).`
+  );
 };
 
 main()

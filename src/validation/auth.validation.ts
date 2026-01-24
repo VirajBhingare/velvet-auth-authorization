@@ -66,9 +66,17 @@ export const resetPasswordSchema = z
     path: ["confirmPassword"],
   });
 
+export const createUserByAdminSchema = z.object({
+  email: z.email({ error: "Invalid email address" }),
+  firstName: firstNameValidation,
+  lastName: lastNameValidation,
+  role: z.enum(Role, "Invalid Role"), // Admin can pick Role
+});
+
 export type RegisterInput = z.infer<typeof registerSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
 export type VerifyOtpInput = z.infer<typeof verifyOtpSchema>;
 export type ResendOtpInput = z.infer<typeof resendOtpSchema>;
 export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>;
 export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;
+export type CreateUserByAdminInput = z.infer<typeof createUserByAdminSchema>;

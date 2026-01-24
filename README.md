@@ -307,7 +307,7 @@ Authorization: Bearer <access_token>
 
 #### 2. Create Course (INSTRUCTOR Only)
 ```http
-POST /api/user/course
+POST /api/user/instructor/create-course
 Authorization: Bearer <access_token>
 Content-Type: application/json
 
@@ -323,9 +323,22 @@ GET /api/user/instructor/courses
 Authorization: Bearer <access_token>
 ```
 
-#### 4. Get All Courses (All Roles)
+#### 4. Create User (ADMIN Only)
 ```http
-GET /api/user/courses
+POST /api/user/create
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "firstName": "John",
+  "lastName": "Doe",
+  "role": "INSTRUCTOR"
+}
+```
+
+#### 5. Get All Courses (All Roles)
+```http
+GET /api/user/all-courses
 Authorization: Bearer <access_token>
 ```
 
